@@ -1,0 +1,43 @@
+﻿@model Zsolt_Szabo_Project_NetflixTrackerApp.Models.User
+
+@{
+    ViewData["Title"] = "Account";
+}
+
+<div class="account-container">
+    <h1>@Model.FirstName @Model.LastName's Profile</h1>
+    <div class="account-card">
+        @if (Model.ProfilePicture != null && Model.ProfilePicture.Length > 0)
+        {
+            string base64Image = Convert.ToBase64String(Model.ProfilePicture);
+            <img src="data:image/png;base64,@base64Image" alt="Profile Picture" />
+        }
+        else
+        {
+            <p>No profile picture available.</p>
+        }
+
+        <div class="account-info">
+            <div class="account-field">
+                <label>First Name:</label>
+                <span>@Model.FirstName</span>
+                <i class="fa fa-pencil edit-icon"></i>
+            </div>
+            <div class="account-field">
+                <label>Last Name:</label>
+                <span>@Model.LastName</span>
+                <i class="fa fa-pencil edit-icon"></i>
+            </div>
+            <div class="account-field">
+                <label>Username:</label>
+                <span>@Model.Username</span>
+                <i class="fa fa-pencil edit-icon"></i>
+            </div>
+            <div class="account-field">
+                <label>Email:</label>
+                <span>@Model.Email</span>
+                <i class="fa fa-pencil edit-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
