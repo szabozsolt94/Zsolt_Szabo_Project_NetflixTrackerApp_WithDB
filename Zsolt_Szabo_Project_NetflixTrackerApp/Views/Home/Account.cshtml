@@ -10,12 +10,15 @@
         @if (Model.ProfilePicture != null && Model.ProfilePicture.Length > 0)
         {
             string base64Image = Convert.ToBase64String(Model.ProfilePicture);
-            <img src="data:image/png;base64,@base64Image" alt="Profile Picture" />
+            string imgSrc = $"data:image/png;base64,{base64Image}"; 
+
+            <img src="@imgSrc" class="profile-pic" alt="Profile Picture" style="width:150px; height:150px; border-radius:50%;" />
         }
         else
         {
-            <p>No profile picture available.</p>
+            <img src="/images/default-profile.png" alt="Default Profile Picture" style="width:150px; height:150px; border-radius:50%;" />
         }
+
 
         <div class="account-info">
             <div class="account-field">
@@ -41,3 +44,5 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/Account.js"></script>
