@@ -10,7 +10,7 @@
         @if (Model.ProfilePicture != null && Model.ProfilePicture.Length > 0)
         {
             string base64Image = Convert.ToBase64String(Model.ProfilePicture);
-            string imgSrc = $"data:image/png;base64,{base64Image}"; 
+            string imgSrc = $"data:image/png;base64,{base64Image}";
 
             <img src="@imgSrc" class="profile-pic" alt="Profile Picture" style="width:150px; height:150px; border-radius:50%;" />
         }
@@ -19,30 +19,37 @@
             <img src="/images/default-profile.png" alt="Default Profile Picture" style="width:150px; height:150px; border-radius:50%;" />
         }
 
-
         <div class="account-info">
-            <div class="account-field">
-                <label>First Name:</label>
-                <span>@Model.FirstName</span>
-                <i class="fa fa-pencil edit-icon"></i>
-            </div>
-            <div class="account-field">
-                <label>Last Name:</label>
-                <span>@Model.LastName</span>
-                <i class="fa fa-pencil edit-icon"></i>
-            </div>
-            <div class="account-field">
-                <label>Username:</label>
-                <span>@Model.Username</span>
-                <i class="fa fa-pencil edit-icon"></i>
-            </div>
-            <div class="account-field">
-                <label>Email:</label>
-                <span>@Model.Email</span>
-                <i class="fa fa-pencil edit-icon"></i>
-            </div>
+            <form asp-action="UpdateAccount" method="post" id="accountForm">
+                <input type="hidden" id="UserID" asp-for="UserID" />
+
+                <div class="account-field">
+                    <label>First Name:</label>
+                    <span>@Model.FirstName</span>
+                    <i class="fa fa-pencil edit-icon" style="cursor: pointer;"></i>
+                </div>
+
+                <div class="account-field">
+                    <label>Last Name:</label>
+                    <span>@Model.LastName</span>
+                    <i class="fa fa-pencil edit-icon" style="cursor: pointer;"></i>
+                </div>
+
+                <div class="account-field">
+                    <label>Username:</label>
+                    <span>@Model.Username</span>
+                    <i class="fa fa-pencil edit-icon" style="cursor: pointer;"></i>
+                </div>
+
+                <div class="account-field">
+                    <label>Email:</label>
+                    <span>@Model.Email</span>
+                    <i class="fa fa-pencil edit-icon" style="cursor: pointer;"></i>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script src="~/js/Account.js"></script>
+

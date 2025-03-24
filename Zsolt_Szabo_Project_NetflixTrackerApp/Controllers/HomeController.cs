@@ -39,6 +39,42 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             return View(user);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccountRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.NewValue) || string.IsNullOrEmpty(request.FieldName))
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            switch (request.FieldName)
+            {
+                case "First Name":
+                    user.FirstName = request.NewValue;
+                    break;
+                case "Last Name":
+                    user.LastName = request.NewValue;
+                    break;
+                case "Username":
+                    user.Username = request.NewValue;
+                    break;
+                case "Email":
+                    user.Email = request.NewValue;
+                    break;
+            }
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Account updated successfully." });
+        }
+
 
         public IActionResult Favorites()
         {
