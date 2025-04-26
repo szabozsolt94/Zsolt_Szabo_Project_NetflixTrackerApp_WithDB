@@ -12,39 +12,11 @@
         </select>
     </div>
 
-    <div class="movies-grid">
+    <div id="moviesGrid"  class="movies-grid">
         <!-- The movie cards will be dynamically populated here -->
     </div>
 </div>
 
-<script>
-    // When the page loads, fetch the movie data
-    $(document).ready(function () {
-        // Define the URL for the Web API
-        var apiUrl = "http://localhost:62481/api/NetflixMovies"; // Replace with your actual API URL
-
-        // Fetch movie data from the API
-        $.ajax({
-            url: apiUrl,
-            type: "GET",
-            success: function (movies) {
-                // Loop through each movie and dynamically create a card for it
-                movies.forEach(function (movie) {
-                    var movieCard = `
-                        <div class="card">
-                            <h3>${movie.Title} (${movie.Year})</h3>
-                            <img src="data:image/jpeg;base64,${movie.Image}" alt="${movie.Title}" />
-                        </div>
-                    `;
-                    // Append the movie card to the grid
-                    $('#moviesGrid').append(movieCard);
-                });
-            },
-            error: function () {
-                alert("Error fetching movie data.");
-            }
-        });
-    });
-</script>
+<script src="~/js/Home.js"></script>
 
 
