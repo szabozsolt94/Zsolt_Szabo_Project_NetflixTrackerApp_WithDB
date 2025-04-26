@@ -35,3 +35,21 @@ $(document).ready(function () {
         }
     });
 });
+
+// Search functionality
+$('#movieSearch').on('input', function () {
+    var searchText = $(this).val().toLowerCase(); // Change text to lower case for case-insensitivity
+
+    // Loop through all movie cards
+    $('.card').each(function () {
+        var title = $(this).find('h3').text().toLowerCase();
+
+        // If title contains the search text, show the card; otherwise, hide it
+        if (title.includes(searchText)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});
+
