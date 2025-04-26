@@ -21,11 +21,11 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             return View();
         }
 
-        // Add this action to retrieve user data for the account page
+        // Retrieve user data for the Account page
         public async Task<IActionResult> Account()
         {
-            // For now, we're assuming a logged-in user with UserID 1
-            var userID = 1;  // Replace with actual logged-in user's ID in real-world scenario
+            // There is only one user, the UserID is always 1
+            var userID = 1; 
 
             var user = await _context.Users
                 .Where(u => u.UserID == userID)

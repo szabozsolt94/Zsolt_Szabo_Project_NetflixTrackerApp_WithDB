@@ -5,8 +5,13 @@
 }
 
 <div class="account-container">
+
+    <!-- Displaying user first and last name -->
     <h1>@Model.FirstName @Model.LastName's Profile</h1>
+
     <div class="account-card">
+
+        <!-- Displaying the profile picture -->
         @if (Model.ProfilePicture != null && Model.ProfilePicture.Length > 0)
         {
             string base64Image = Convert.ToBase64String(Model.ProfilePicture);
@@ -16,9 +21,10 @@
         }
         else
         {
-            <img src="/images/default-profile.png" alt="Default Profile Picture" style="width:150px; height:150px; border-radius:50%;" />
+			<p>No profile picture available.</p>
         }
 
+        <!-- Displaying user information -->
         <div class="account-info">
             <form asp-action="UpdateAccount" method="post" id="accountForm">
                 <input type="hidden" id="UserID" asp-for="UserID" />

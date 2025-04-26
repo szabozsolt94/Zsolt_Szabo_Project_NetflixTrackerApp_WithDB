@@ -1,100 +1,85 @@
-﻿/* General styles for account page */
+﻿/* General styles for Account page */
 .account-container {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: #1f1f1f;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
 .account-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
-/* Styling for the account fields */
+/* Account fields */
 .account-info {
-    width: 100%;
+  width: 100%;
 }
 
 .account-field {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-    .account-field label {
-        font-weight: bold;
-        color: #e50914; /* Accent color */
-        flex: 1;
-        text-align: left;
-    }
+.account-field label {
+  font-weight: bold;
+  color: #e50914; 
+  flex: 1;
+  text-align: left;
+}
 
-    .account-field span {
-        flex: 2;
-        text-align: left;
-        color: #ccc; /* Light text color */
-    }
+.account-field span {
+  flex: 2;
+  text-align: left;
+  color: #ccc; 
+}
 
-    .account-field input {
-        flex: 2;
-        text-align: left;
-        font-size: 15px;
-    }
+.account-field input {
+  flex: 2;
+  text-align: left;
+  font-size: 15px;
+}
 
-/* Styling for edit icon */
+/* Edit, save, cancel icons */
 .edit-icon {
-    color: #e50914;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin-left: 10px; 
+  color: #e50914;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-left: 10px; 
 }
 
-    .edit-icon:hover {
-        color: #fff;
-    }
+.edit-icon:hover {
+  color: #fff;
+}
 
 .save-icon, .cancel-icon {
-    margin-left: 10px; 
+  margin-left: 10px; 
 }
 
 .cancel-icon {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .hidden {
-    display: none;
-}
-/* Hide the save/cancel buttons initially */
-.button-container {
-    display: none;
-    margin-top: 10px;
+  display: none;
 }
 
-    .button-container button {
-        margin-right: 10px;
-    }
-
-/* Button styles */
-button {
-    background-color: #e50914;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 3px;
-    width: 100%;
-    transition: background-color 0.3s ease;
+/* Profile picture */
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 2px solid #e50914;
+  object-fit: cover;
+  margin-bottom: 20px 20px;
 }
-
-    button:hover {
-        background-color: #b20710;
-    }
