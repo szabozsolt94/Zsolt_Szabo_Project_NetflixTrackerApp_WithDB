@@ -12,7 +12,11 @@ $(document).ready(function () {
         // If successful, loop through the movies and create cards
         success: function (movies) {
             movies.forEach(function (movie) {
-                var $card = $('<div>', { class: 'card' });
+                console.log(movie.Title, movie.Type);
+                var $card = $('<div>', {
+                    class: 'card',
+                    'data-type': movie.Type.toLowerCase()
+                });
                 var $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
                 var $img = $('<img>', {
                     src: `data:image/jpeg;base64,${movie.Image}`,
@@ -36,6 +40,7 @@ $(document).ready(function () {
     });
 });
 
+
 // Search functionality
 $('#movieSearch').on('input', function () {
     var searchText = $(this).val().toLowerCase(); // Change text to lower case for case-insensitivity
@@ -52,4 +57,31 @@ $('#movieSearch').on('input', function () {
         }
     });
 });
+
+
+// Filtering dropdown menu by type (movies or TV shows)
+$('#filterDropdown').on('change', function () {
+    var filter = $(this).val(); // Get the selected value
+
+    // Loop through all movie cards, check their types
+    $('.card').each(function () {
+        var isMovie = $(this).data('type') === 'movie';   
+        var isTVShow = $(this).data('type') === 'series';
+
+        // Show or hide the card based on the selected filter
+        if (filter === '') {
+            $(this).show(); 
+        }
+        else if (filter === 'movies' && isMovie) {
+            $(this).show();
+        }
+        else if (filter === 'tvshows' && isTVShow) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+});
+
 
