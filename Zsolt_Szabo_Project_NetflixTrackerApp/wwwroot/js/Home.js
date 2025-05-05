@@ -13,28 +13,58 @@ $(document).ready(function () {
         success: function (movies) {
             movies.forEach(function (movie) {
                 console.log(movie.Title, movie.Type);
+
+                // Create a new card for each movie
                 var $card = $('<div>', {
                     class: 'card',
                     'data-type': movie.Type.toLowerCase()
                 });
+
+                // Create the movie title with year
                 var $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
+
+                // Create the movie image
                 var $img = $('<img>', {
                     src: `data:image/jpeg;base64,${movie.Image}`,
                     alt: movie.Title
                 });
 
-                // When the image has fully loaded, add the 'loaded' class to trigger CSS effects (this was needed due to issue with CSS not applying to images)
-                $img.on('load', function () {
-                    $(this).addClass('loaded');
+                // Create container for icons
+                var $iconContainer = $('<div>', { class: 'icon-container' });
+
+                // "Add to Favorites" icon
+                var $favIcon = $('<i>', {
+                    class: 'fa-regular fa-star icon-button favorite'
+                }).on('click', function () {
+                    $(this).toggleClass('fa-solid fa-regular');
                 });
 
-                $card.append($title).append($img);
+                // "Mark as Watched" icon
+                var $watchedIcon = $('<i>', {
+                    class: 'fa-regular fa-circle-check icon-button watched'
+                }).on('click', function () {
+                    $(this).toggleClass('fa-solid fa-regular');
+                });
+
+                // "Add to Watch Later" icon
+                var $laterIcon = $('<i>', {
+                    class: 'fa-regular fa-clock icon-button watch-later'
+                }).on('click', function () {
+                    $(this).toggleClass('fa-solid fa-regular');
+                });
+
+                // Append icons to the container
+                $iconContainer.append($favIcon, $watchedIcon, $laterIcon);
+
+                // Append title, image, and icons to the card
+                $card.append($title, $img, $iconContainer);
+
+                // Append the card to the grid
                 $('#moviesGrid').append($card);
             });
-        },
-
+        }
         // If the request fails
-        error: function () {
+        ,error: function () {
             alert("Error fetching movie data.");
         }
     });

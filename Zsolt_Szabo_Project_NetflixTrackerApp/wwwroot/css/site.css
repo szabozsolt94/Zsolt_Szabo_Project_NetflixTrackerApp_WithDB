@@ -27,7 +27,7 @@ body {
 }
 
 .container {
-    padding: 20px;
+  padding: 20px 20px 50px 20px;
 }
 
 /* Nav bar */
@@ -101,6 +101,25 @@ button {
 
 button:hover {
   background-color: #b20710;
+}
+
+/* Card buttons styling */
+.icon-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.icon-button {
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+  color: #ccc;
+}
+
+.icon-button.fa-solid {
+  color: white;
 }
 
 /* Footer */
