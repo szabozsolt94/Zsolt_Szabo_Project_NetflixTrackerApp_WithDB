@@ -9,5 +9,6 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Data
         public DbSet<User> Users { get; set; } 
         public DbSet<Favorites> Favorites { get; set; }
         public DbSet<Watched> Watched { get; set; }
+        public DbSet<WatchLater> WatchLater { get; set; }
     }
 }

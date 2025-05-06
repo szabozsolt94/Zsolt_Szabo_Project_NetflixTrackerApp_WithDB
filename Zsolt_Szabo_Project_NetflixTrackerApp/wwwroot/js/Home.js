@@ -51,9 +51,9 @@ $(document).ready(function () {
                 }).on('click', function () {
                     $(this).toggleClass('fa-solid fa-regular');
 
-                var movieId = $(this).closest('.card').data('movie-id');
+                    var movieId = $(this).closest('.card').data('movie-id');
 
-                // Add to watched logic
+                // Add to Watched logic
                 addMovieToWatched(movieId);
                 });
 
@@ -62,6 +62,11 @@ $(document).ready(function () {
                     class: 'fa-regular fa-clock icon-button watch-later'
                 }).on('click', function () {
                     $(this).toggleClass('fa-solid fa-regular');
+
+                    var movieId = $(this).closest('.card').data('movie-id');
+
+                    // Add to WatchLater logic
+                    addMovieToWatchLater(movieId);
                 });
 
                 // Append icons to the container
@@ -133,6 +138,32 @@ function addMovieToWatched(movieId) {
         }
     });
 }
+
+function addMovieToWatchLater(movieId) {
+    $.ajax({
+        url: 'https://localhost:7017/watchlater/add',
+        type: 'POST',
+        data: {
+            movieID: movieId,
+            userID: 1 // Fixed UserID
+        },
+        success: function (response) {
+            alert(response.message);
+
+            const $watchLaterIcon = $(`.card[data-movie-id=${movieId}] .watchlater`);
+
+            if (response.message === "Movie added to Watch Later!") {
+                $watchLaterIcon.addClass('fa-solid').removeClass('fa-regular');
+            } else if (response.message === "Movie removed from Watch Later!") {
+                $watchLaterIcon.addClass('fa-regular').removeClass('fa-solid');
+            }
+        },
+        error: function () {
+            alert("Error updating Watch Later list.");
+        }
+    });
+}
+
 
 
 
