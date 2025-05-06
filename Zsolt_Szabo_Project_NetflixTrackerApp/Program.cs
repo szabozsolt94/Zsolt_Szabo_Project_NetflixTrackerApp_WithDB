@@ -10,6 +10,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add CORS policy configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Allow all origins (you can specify a specific domain if you need)
+              .AllowAnyMethod()  // Allow all HTTP methods (GET, POST, etc.)
+              .AllowAnyHeader(); // Allow all headers
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,6 +39,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Use the CORS policy globally
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -35,3 +49,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
