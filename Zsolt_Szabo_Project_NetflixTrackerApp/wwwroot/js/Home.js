@@ -16,6 +16,7 @@ $(document).ready(function () {
                 // Create a new card for each movie
                 var $card = $('<div>', {
                     class: 'card',
+                    'data-type': movie.Type.toLowerCase(),
                     'data-movie-id': movie.MovieID // Store MovieID in a data attribute
                 });
 
