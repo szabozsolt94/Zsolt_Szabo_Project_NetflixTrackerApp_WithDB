@@ -27,8 +27,10 @@
                     'data-movie-id': movie.MovieID
                 });
 
+                // Create the title element first
                 const $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
 
+                // Create the image element
                 const $img = $('<img>', {
                     src: movie.Image
                         ? `data:image/jpeg;base64,${movie.Image}`
@@ -36,19 +38,13 @@
                     alt: movie.Title
                 });
 
-                const $removeForm = $('<form>', {
-                    method: 'post',
-                    action: '/Favorites/remove'
-                }).append(
-                    $('<input>', { type: 'hidden', name: 'movieID', value: movie.MovieID }),
-                    $('<input>', { type: 'hidden', name: 'userID', value: '1' }), // or dynamic later
-                    $('<button>', { type: 'submit' }).text('Remove')
-                );
-
-                $card.append($img, $title, $removeForm);
+                // Append the title first, then the image to the card
+                $card.append($title, $img);
 
                 $('#favoritesContainer').append($card);
             })
             .catch(err => console.error("Error:", err.message));
     });
 </script>
+
+
