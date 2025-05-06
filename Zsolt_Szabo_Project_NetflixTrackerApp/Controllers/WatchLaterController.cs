@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Zsolt_Szabo_Project_NetflixTrackerApp.Data;
 using Zsolt_Szabo_Project_NetflixTrackerApp.Models;
+using System.Linq;
 
 namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
 {
-    [Route("watchlater")]
+    [Route("WatchLater")]  // Explicit base route for Watch Later actions
     public class WatchLaterController : Controller
     {
         private readonly AppDbContext _context;
@@ -14,22 +15,40 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             _context = context;
         }
 
-        [HttpPost("add")]  // Use 'add' route for consistency with WatchedController
+        // GET /WatchLater - Display the Watch Later page
+        [HttpGet("")]
+        public IActionResult Index()
+        {
+            // Fetch the list of movies marked as "Watch Later" for the user
+            // For now, assuming UserID is hardcoded to 1 (you might want to retrieve it dynamically from the session or context)
+            var userID = 1;
+
+            // Assuming you have a WatchLater table and returning movies for the current user
+            var moviesToWatchLater = _context.WatchLater
+                .Where(w => w.UserID == userID)
+                .Select(w => w.MovieID)  // Get only the movie IDs for now, expand as needed
+                .ToList();
+
+            // Pass the list of movies to the view (this could be more detailed)
+            return View(moviesToWatchLater);
+        }
+
+        // POST /WatchLater/add - Add or remove movie from the Watch Later list
+        [HttpPost("add")]
         public IActionResult AddToWatchLater(int movieID, int userID)
         {
-            // Check if the movie already exists in Watch Later
-            var exists = _context.WatchLater
+            var existing = _context.WatchLater
                 .FirstOrDefault(w => w.MovieID == movieID && w.UserID == userID);
 
-            if (exists != null)
+            if (existing != null)
             {
-                // If it exists, remove it from Watch Later
-                _context.WatchLater.Remove(exists);
+                // If movie is already in Watch Later, remove it
+                _context.WatchLater.Remove(existing);
                 _context.SaveChanges();
                 return Json(new { message = "Movie removed from Watch Later!" });
             }
 
-            // If it doesn't exist, add it to Watch Later
+            // Add movie to Watch Later if not already added
             var newWatchLater = new WatchLater
             {
                 MovieID = movieID,
@@ -43,3 +62,4 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
         }
     }
 }
+

@@ -32,7 +32,7 @@
                 const newValue = input.value.trim();
                 const fieldName = field.querySelector("label").innerText.replace(":", "");
 
-                fetch("/Home/UpdateAccount", {  
+                fetch("/Account/UpdateAccount", {  
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
