@@ -23,9 +23,9 @@ $(document).ready(function () {
                 // Create the movie title with year
                 var $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
 
-                // Create the movie image
+                // Create the movie image (use placeholder if null)
                 var $img = $('<img>', {
-                    src: `data:image/jpeg;base64,${movie.Image}`,
+                    src: movie.Image ? `data:image/jpeg;base64,${movie.Image}` : '/img/moviecardplaceholder.jpg',
                     alt: movie.Title
                 });
 
@@ -38,11 +38,11 @@ $(document).ready(function () {
                 }).on('click', function () {
                     $(this).toggleClass('fa-solid fa-regular');
 
-                    // Get the MovieID from the clicked card
-                    var movieId = $(this).closest('.card').data('movie-id');
+                // Get the MovieID from the clicked card
+                var movieId = $(this).closest('.card').data('movie-id');
 
-                    // Add to favorites logic (call a function to handle this)
-                    addMovieToFavorites(movieId);
+                // Add to favorites logic (call a function to handle this)
+                addMovieToFavorites(movieId);
                 });
 
                 // "Mark as Watched" icon
@@ -50,6 +50,11 @@ $(document).ready(function () {
                     class: 'fa-regular fa-circle-check icon-button watched'
                 }).on('click', function () {
                     $(this).toggleClass('fa-solid fa-regular');
+
+                var movieId = $(this).closest('.card').data('movie-id');
+
+                // Add to watched logic
+                addMovieToWatched(movieId);
                 });
 
                 // "Add to Watch Later" icon
@@ -103,6 +108,33 @@ function addMovieToFavorites(movieId) {
         }
     });
 }
+
+function addMovieToWatched(movieId) {
+    $.ajax({
+        url: 'https://localhost:7017/watched/add',
+        type: 'POST',
+        data: {
+            movieID: movieId,
+            userID: 1  // Assuming UserID = 1 for now
+        },
+        success: function (response) {
+            alert(response.message);
+
+            const $watchedIcon = $(`.card[data-movie-id=${movieId}] .watched`);
+
+            if (response.message === "Movie marked as Watched!") {
+                $watchedIcon.addClass('fa-solid').removeClass('fa-regular');
+            } else if (response.message === "Movie removed from Watched!") {
+                $watchedIcon.addClass('fa-regular').removeClass('fa-solid');
+            }
+        },
+        error: function () {
+            alert("Error marking movie as watched.");
+        }
+    });
+}
+
+
 
 
 
