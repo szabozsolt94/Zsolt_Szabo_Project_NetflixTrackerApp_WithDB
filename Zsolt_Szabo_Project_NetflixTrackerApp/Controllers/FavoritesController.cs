@@ -31,7 +31,7 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             }
 
             // Add to favorites if not already present
-            var newFavorite = new MovieList
+            var newFavorite = new Favorites
             {
                 MovieID = movieID,
                 UserID = userID
