@@ -1,21 +1,49 @@
-﻿@{
+﻿@model List<int>
+
+@{
     ViewData["Title"] = "Watch Later";
 }
 
-<div class="container">
-    <h1>Movies to Watch Later</h1>
+<h1>Movies to Watch Later</h1>
 
-    <!-- Loop through the movies and display them -->
-    @foreach (var movieId in Model)
-    {
-        <div class="card">
-            <h3>Movie Title: @movieId</h3>
-            <!-- Add button logic here if you want to allow users to remove the movie from the list -->
-            <form method="post" action="/WatchLater/add">
-                <input type="hidden" name="movieID" value="@movieId" />
-                <input type="hidden" name="userID" value="1" /> <!-- Replace with dynamic user ID -->
-                <button type="submit">Remove</button>
-            </form>
-        </div>
-    }
+<div id="watchLaterContainer" class="container">
+    <!-- Movie cards will be injected here -->
 </div>
+
+<script>
+    const watchLaterIDs = @Html.Raw(Json.Serialize(Model)); // Pass C# list to JS
+    const apiBaseUrl = 'http://localhost:62481'; // WebAPI port
+
+    watchLaterIDs.forEach(movieId => {
+        fetch(`http://localhost:62481/api/NetflixMovies/${movieId}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Movie not found");
+                return response.json();
+            })
+            .then(movie => {
+                const $card = $('<div>', {
+                    class: 'card',
+                    'data-type': movie.Type.toLowerCase(),
+                    'data-movie-id': movie.MovieID
+                });
+
+                // Create the title element first
+                const $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
+
+                // Create the image element
+                const $img = $('<img>', {
+                    src: movie.Image
+                        ? `data:image/jpeg;base64,${movie.Image}`
+                        : '/img/moviecardplaceholder.jpg',
+                    alt: movie.Title
+                });
+
+                // Append the title first, then the image to the card
+                $card.append($title, $img);
+
+                $('#watchLaterContainer').append($card);
+            })
+            .catch(err => console.error("Error:", err.message));
+    });
+</script>
+

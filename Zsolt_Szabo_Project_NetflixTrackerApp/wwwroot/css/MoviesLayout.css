@@ -1,4 +1,5 @@
-﻿#favoritesContainer {
+﻿/* Stying for Favorites, Watched and Watch Later pages*/
+#favoritesContainer, #watchedContainer, #watchLaterContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 40px;
