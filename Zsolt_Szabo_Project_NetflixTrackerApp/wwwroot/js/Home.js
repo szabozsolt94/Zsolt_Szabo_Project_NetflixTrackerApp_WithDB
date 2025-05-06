@@ -9,7 +9,6 @@ $(document).ready(function () {
         url: apiUrl,
         type: "GET",
 
-        // If successful, loop through the movies and create cards
         success: function (movies) {
             movies.forEach(function (movie) {
                 console.log(movie.Title, movie.Type);
@@ -17,7 +16,7 @@ $(document).ready(function () {
                 // Create a new card for each movie
                 var $card = $('<div>', {
                     class: 'card',
-                    'data-type': movie.Type.toLowerCase()
+                    'data-movie-id': movie.MovieID // Store MovieID in a data attribute
                 });
 
                 // Create the movie title with year
@@ -37,6 +36,12 @@ $(document).ready(function () {
                     class: 'fa-regular fa-star icon-button favorite'
                 }).on('click', function () {
                     $(this).toggleClass('fa-solid fa-regular');
+
+                    // Get the MovieID from the clicked card
+                    var movieId = $(this).closest('.card').data('movie-id');
+
+                    // Add to favorites logic (call a function to handle this)
+                    addMovieToFavorites(movieId);
                 });
 
                 // "Mark as Watched" icon
@@ -62,13 +67,47 @@ $(document).ready(function () {
                 // Append the card to the grid
                 $('#moviesGrid').append($card);
             });
-        }
-        // If the request fails
-        ,error: function () {
+        },
+
+        error: function () {
             alert("Error fetching movie data.");
         }
     });
 });
+
+// Add movie to favorites function
+// Add movie to favorites or remove it if already in favorites
+function addMovieToFavorites(movieId) {
+    $.ajax({
+        url: 'https://localhost:7017/favorites/add',  // Full URL to the route
+        type: 'POST',
+        data: {
+            movieID: movieId,
+            userID: 1  // Assuming UserID = 1 for now
+        },
+        success: function (response) {
+            alert(response.message); // Show success message
+
+            // After the request, toggle the class for the favorite icon
+            const $favIcon = $(`.card[data-movie-id=${movieId}] .favorite`);
+
+            if (response.message === "Movie added to Favorites!") {
+                $favIcon.addClass('fa-solid').removeClass('fa-regular');  // Change to solid star
+            } else if (response.message === "Movie removed from Favorites!") {
+                $favIcon.addClass('fa-regular').removeClass('fa-solid');  // Change to regular star
+            }
+        },
+        error: function () {
+            alert("Error adding movie to favorites.");
+        }
+    });
+}
+
+
+
+
+
+
 
 
 // Search functionality
