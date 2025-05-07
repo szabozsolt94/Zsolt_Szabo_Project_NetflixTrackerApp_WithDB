@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
 {
-    [Route("Watched")]  // Explicit base route for Watched actions
+    [Route("Watched")] 
     public class WatchedController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,24 +15,23 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             _context = context;
         }
 
-        // GET /Watched - Display the Watched page
+        // Display the user's watched movies from DB (Watched table) on Watched page
         [HttpGet("")]
         public IActionResult Index()
         {
-            // Fetch the list of movies marked as "Watched" for the user
             var userID = 1;
 
-            // Fetch watched movie IDs for the current user
+            // Fetch the list of movies marked as watched
             var moviesInWatched = _context.Watched
                 .Where(w => w.UserID == userID)
-                .Select(w => w.MovieID)  // Only getting movie IDs for now (expand as needed)
+                .Select(w => w.MovieID)
                 .ToList();
 
-            // Pass the list of movie IDs to the view (you can expand this to include more details like title, etc.)
+            // Pass the list of MovieID's to the view, where we are passing them into MovieListRenderer.js
             return View(moviesInWatched);
         }
 
-        // POST /Watched/add - Add or remove movie from the Watched list
+        // Add or remove movie from the Watched list
         [HttpPost("add")]
         public IActionResult AddToWatched(int movieID, int userID)
         {

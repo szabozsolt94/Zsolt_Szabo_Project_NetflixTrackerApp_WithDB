@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
 {
-    [Route("Favorites")]  // Explicit base route for Favorites actions
+    [Route("Favorites")] 
     public class FavoritesController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,24 +15,23 @@ namespace Zsolt_Szabo_Project_NetflixTrackerApp.Controllers
             _context = context;
         }
 
-        // GET /Favorites - Display the Favorites page
+        // Display the user's favorite movies from DB (Favorites table) on Favorites page
         [HttpGet("")]
         public IActionResult Index()
         {
-            // Fetch the list of movies marked as "Favorites" for the user
             var userID = 1;
 
-            // Fetch favorite movie IDs for the current user
+            // Fetch the list of movies marked as favorites
             var moviesInFavorites = _context.Favorites
                 .Where(f => f.UserID == userID)
-                .Select(f => f.MovieID)  // Only getting movie IDs for now (expand as needed)
+                .Select(f => f.MovieID)
                 .ToList();
 
-            // Pass the list of movie IDs to the view (you can expand this to include more details like title, etc.)
+            // Pass the list of MovieID's to the view, where we are passing them into MovieListRenderer.js
             return View(moviesInFavorites);
         }
 
-        // POST /Favorites/add - Add or remove movie from the Favorites list
+        // Add or remove movie from the Favorites list
         [HttpPost("add")]
         public IActionResult AddToFavorites(int movieID, int userID)
         {

@@ -1,111 +1,93 @@
-﻿// Fetch all the Netflix movies from the API
-$(document).ready(function () {
+﻿$(document).ready(function () {
 
-    // Set the API endpoint URL
-    var apiUrl = "http://localhost:62481/api/NetflixMovies";
+    // Save the API url
+    let apiUrl = "http://localhost:62481/api/NetflixMovies";
 
-    // Make a GET request to the API
+    // Call the NetflixTrackerAPI and fetch every movie
     $.ajax({
         url: apiUrl,
         type: "GET",
-
         success: function (movies) {
-            movies.forEach(function (movie) {
-                console.log(movie.Title, movie.Type);
+            // Loop through each movie and create a card for it
+            for (let i = 0; i < movies.length; i++) {
+                let movie = movies[i];
 
-                // Create a new card for each movie
-                var $card = $('<div>', {
-                    class: 'card',
-                    'data-type': movie.Type.toLowerCase(),
-                    'data-movie-id': movie.MovieID // Store MovieID in a data attribute
-                });
+                // Create the movie card
+                // Set data attributes for the filtering dropdown and to identify the movie
+                let card = $('<div class="card">');
+                card.attr('data-type', movie.Type.toLowerCase());
+                card.attr('data-movie-id', movie.MovieID);
 
-                // Create the movie title with year
-                var $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
+                // Create the title and append it to the card
+                let title = $('<h3>').text(movie.Title + " (" + movie.Year + ")");
+                card.append(title);
 
-                // Create the movie image (use placeholder if null)
-                var $img = $('<img>', {
-                    src: movie.Image ? `data:image/jpeg;base64,${movie.Image}` : '/img/moviecardplaceholder.jpg',
-                    alt: movie.Title
-                });
+                // Create move image and append it to the card
+                let img = $('<img>');
+                img.attr('src', movie.Image ? 'data:image/jpeg;base64,' + movie.Image : '/img/moviecardplaceholder.jpg');
+                img.attr('alt', movie.Title);
+                card.append(img);
 
-                // Create container for icons
-                var $iconContainer = $('<div>', { class: 'icon-container' });
+                // Create a container for the 3 icons
+                let iconContainer = $('<div class="icon-container">');
 
-                // "Add to Favorites" icon
-                var $favIcon = $('<i>', {
-                    class: 'fa-regular fa-star icon-button favorite'
-                }).on('click', function () {
+                // Create and add the "Favorites" icon
+                let favIcon = $('<i class="fa-regular fa-star icon-button favorite">');
+                favIcon.click(function () {
                     $(this).toggleClass('fa-solid fa-regular');
-
-                // Get the MovieID from the clicked card
-                var movieId = $(this).closest('.card').data('movie-id');
-
-                // Add to favorites logic (call a function to handle this)
-                addMovieToFavorites(movieId);
+                    let movieId = $(this).closest('.card').data('movie-id');
+                    addMovieToFavorites(movieId);
                 });
 
-                // "Mark as Watched" icon
-                var $watchedIcon = $('<i>', {
-                    class: 'fa-regular fa-circle-check icon-button watched'
-                }).on('click', function () {
+                // Create and add the "Watched" icon
+                let watchedIcon = $('<i class="fa-regular fa-circle-check icon-button watched">');
+                watchedIcon.click(function () {
                     $(this).toggleClass('fa-solid fa-regular');
-
-                    var movieId = $(this).closest('.card').data('movie-id');
-
-                // Add to Watched logic
-                addMovieToWatched(movieId);
+                    let movieId = $(this).closest('.card').data('movie-id');
+                    addMovieToWatched(movieId);
                 });
 
-                // "Add to Watch Later" icon
-                var $laterIcon = $('<i>', {
-                    class: 'fa-regular fa-clock icon-button watch-later'
-                }).on('click', function () {
+                // Create and add the "Watch Later" icon
+                let laterIcon = $('<i class="fa-regular fa-clock icon-button watch-later">');
+                laterIcon.click(function () {
                     $(this).toggleClass('fa-solid fa-regular');
-
-                    var movieId = $(this).closest('.card').data('movie-id');
-
-                    // Add to WatchLater logic
+                    let movieId = $(this).closest('.card').data('movie-id');
                     addMovieToWatchLater(movieId);
                 });
 
-                // Append icons to the container
-                $iconContainer.append($favIcon, $watchedIcon, $laterIcon);
-
-                // Append title, image, and icons to the card
-                $card.append($title, $img, $iconContainer);
+                // Append icons to the icon container
+                iconContainer.append(favIcon, watchedIcon, laterIcon);
+                card.append(iconContainer);
 
                 // Append the card to the grid
-                $('#moviesGrid').append($card);
-            });
+                $('#moviesGrid').append(card);
+            }
         },
-
         error: function () {
             alert("Error fetching movie data.");
         }
     });
 });
 
-// Add movie to favorites function
-// Add movie to favorites or remove it if already in favorites
+// Function to handle click event on "Favorites" (star) icon
+// Send MovieID and UserID to the backend API to add or remove the movie from Favorites DB table
 function addMovieToFavorites(movieId) {
     $.ajax({
-        url: 'https://localhost:7017/favorites/add',  // Full URL to the route
+        url: 'https://localhost:7017/favorites/add',
         type: 'POST',
         data: {
             movieID: movieId,
-            userID: 1  // Assuming UserID = 1 for now
+            userID: 1
         },
         success: function (response) {
-            alert(response.message); // Show success message
+            alert(response.message);
+            let favIcon = $('.card[data-movie-id=' + movieId + '] .favorite');
 
-            // After the request, toggle the class for the favorite icon
-            const $favIcon = $(`.card[data-movie-id=${movieId}] .favorite`);
-
+            // Toggle the look of the icon when adding / removing movies as favorites
             if (response.message === "Movie added to Favorites!") {
-                $favIcon.addClass('fa-solid').removeClass('fa-regular');  // Change to solid star
+                favIcon.addClass('fa-solid').removeClass('fa-regular');
             } else if (response.message === "Movie removed from Favorites!") {
-                $favIcon.addClass('fa-regular').removeClass('fa-solid');  // Change to regular star
+                favIcon.addClass('fa-regular').removeClass('fa-solid');
             }
         },
         error: function () {
@@ -114,23 +96,25 @@ function addMovieToFavorites(movieId) {
     });
 }
 
+// Function to handle click event on "Watched" icon
+// Send MovieID and UserID to the backend API to add or remove the movie from Watched DB table
 function addMovieToWatched(movieId) {
     $.ajax({
         url: 'https://localhost:7017/watched/add',
         type: 'POST',
         data: {
             movieID: movieId,
-            userID: 1  // Assuming UserID = 1 for now
+            userID: 1
         },
         success: function (response) {
             alert(response.message);
+            let watchedIcon = $('.card[data-movie-id=' + movieId + '] .watched');
 
-            const $watchedIcon = $(`.card[data-movie-id=${movieId}] .watched`);
-
+            // Toggle the look of the icon when adding / removing movies as favorites
             if (response.message === "Movie marked as Watched!") {
-                $watchedIcon.addClass('fa-solid').removeClass('fa-regular');
+                watchedIcon.addClass('fa-solid').removeClass('fa-regular');
             } else if (response.message === "Movie removed from Watched!") {
-                $watchedIcon.addClass('fa-regular').removeClass('fa-solid');
+                watchedIcon.addClass('fa-regular').removeClass('fa-solid');
             }
         },
         error: function () {
@@ -139,23 +123,25 @@ function addMovieToWatched(movieId) {
     });
 }
 
+// Function to handle click event on "Watch Later" icon
+// Send MovieID and UserID to the backend API to add or remove the movie from WatchLater DB table
 function addMovieToWatchLater(movieId) {
     $.ajax({
         url: 'https://localhost:7017/watchlater/add',
         type: 'POST',
         data: {
             movieID: movieId,
-            userID: 1 // Fixed UserID
+            userID: 1
         },
         success: function (response) {
             alert(response.message);
+            let watchLaterIcon = $('.card[data-movie-id=' + movieId + '] .watchlater');
 
-            const $watchLaterIcon = $(`.card[data-movie-id=${movieId}] .watchlater`);
-
+            // Toggle the look of the icon when adding / removing movies as favorites
             if (response.message === "Movie added to Watch Later!") {
-                $watchLaterIcon.addClass('fa-solid').removeClass('fa-regular');
+                watchLaterIcon.addClass('fa-solid').removeClass('fa-regular');
             } else if (response.message === "Movie removed from Watch Later!") {
-                $watchLaterIcon.addClass('fa-regular').removeClass('fa-solid');
+                watchLaterIcon.addClass('fa-regular').removeClass('fa-solid');
             }
         },
         error: function () {
@@ -164,26 +150,16 @@ function addMovieToWatchLater(movieId) {
     });
 }
 
-
-
-
-
-
-
-
-
-
-
-// Search functionality
+// Search bar functionality on Home page
 $('#movieSearch').on('input', function () {
-    var searchText = $(this).val().toLowerCase(); // Change text to lower case for case-insensitivity
+    let searchText = $(this).val().toLowerCase();
 
-    // Loop through all movie cards
+    // Loop through the title of each movie card
     $('.card').each(function () {
-        var title = $(this).find('h3').text().toLowerCase();
+        let movieTitle = $(this).find('h3').text().toLowerCase();
 
-        // If title contains the search text, show the card; otherwise, hide it
-        if (title.includes(searchText)) {
+        // Check if the title includes the search letter or text
+        if (movieTitle.includes(searchText)) {
             $(this).show();
         } else {
             $(this).hide();
@@ -191,30 +167,35 @@ $('#movieSearch').on('input', function () {
     });
 });
 
-
-// Filtering dropdown menu by type (movies or TV shows)
+// Filter dropdown functionality on Home page
 $('#filterDropdown').on('change', function () {
-    var filter = $(this).val(); // Get the selected value
+    let selectedOption = $(this).val();
 
-    // Loop through all movie cards, check their types
+    // Loop through each movie card and check their data-type (movie or series)
     $('.card').each(function () {
-        var isMovie = $(this).data('type') === 'movie';   
-        var isTVShow = $(this).data('type') === 'series';
+        let cardType = $(this).data('type');
 
-        // Show or hide the card based on the selected filter
-        if (filter === '') {
-            $(this).show(); 
-        }
-        else if (filter === 'movies' && isMovie) {
+        // Show all cards if nothing is selected
+        if (selectedOption === '') {
             $(this).show();
         }
-        else if (filter === 'tvshows' && isTVShow) {
+
+        // Show only movies
+        else if (selectedOption === 'movies' && cardType === 'movie') {
             $(this).show();
         }
+
+        // Show only series
+        else if (selectedOption === 'tvshows' && cardType === 'series') {
+            $(this).show();
+        }
+
+        // Hide anything that doesn't match
         else {
             $(this).hide();
         }
     });
 });
+
 
 

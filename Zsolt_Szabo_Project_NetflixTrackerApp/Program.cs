@@ -3,30 +3,27 @@ using Zsolt_Szabo_Project_NetflixTrackerApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add the DbContext and connection string
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add CORS policy configuration
+// Add CORS policy configuration to allow requests from any origin
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()  // Allow all origins (you can specify a specific domain if you need)
-              .AllowAnyMethod()  // Allow all HTTP methods (GET, POST, etc.)
-              .AllowAnyHeader(); // Allow all headers
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage(); // Show detailed errors in development
+    app.UseDeveloperExceptionPage();
 }
 else
 {

@@ -1,21 +1,29 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", function () {
+    // Select all edit icons
     const editIcons = document.querySelectorAll(".edit-icon");
 
-    editIcons.forEach(icon => {
-        icon.addEventListener("click", () => {
+    // Loop through all the icons
+    for (let i = 0; i < editIcons.length; i++) {
+        const icon = editIcons[i];
+
+        icon.addEventListener("click", function () {
+            // Get the closest field to the icon
             const field = icon.closest(".account-field");
             const span = field.querySelector("span");
-            const input = document.createElement("input");
 
+            // Create an input field to replace the span
+            const input = document.createElement("input");
             input.type = "text";
             input.value = span.innerText.trim();
             input.classList.add("form-control");
+
+            // Replace span with input field
             field.replaceChild(input, span);
 
-            // Hide the pencil icon when clicked
+            // Hide the pencil icon
             icon.classList.add("hidden");
 
-            // Add ✔ and X icons for Save and Cancel
+            // Create Save and Cancel icons using Font Awesome
             const saveIcon = document.createElement("i");
             const cancelIcon = document.createElement("i");
 
@@ -25,30 +33,30 @@
             field.appendChild(saveIcon);
             field.appendChild(cancelIcon);
 
-            // Handle Save icon click
-            saveIcon.addEventListener("click", () => {
-                console.log("Save clicked");
+            // Click event for Save icon
+            saveIcon.addEventListener("click", function () {
 
+                // Get the new value from the input field, remove whitespace and ":" from the field name
                 const newValue = input.value.trim();
                 const fieldName = field.querySelector("label").innerText.replace(":", "");
 
-                fetch("/Account/UpdateAccount", {  
+                // Send POST request to the server
+                fetch("/Account/UpdateAccount", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         userId: document.querySelector("#UserID").value,
-                        fieldName,
-                        newValue
+                        fieldName: fieldName,
+                        newValue: newValue
                     })
                 })
-                    .then(response => {
+                    .then(function (response) {
                         if (response.ok) {
+                            // Update the UI if successful
                             span.innerText = newValue;
                             field.replaceChild(span, input);
                             saveIcon.remove();
                             cancelIcon.remove();
-
-                            // Show the pencil icon again after saving
                             icon.classList.remove("hidden");
                         } else {
                             alert("Error updating profile.");
@@ -56,15 +64,14 @@
                     });
             });
 
-            // Handle Cancel icon click
-            cancelIcon.addEventListener("click", () => {
-                field.replaceChild(span, input);  // Restore the original value (span)
-                saveIcon.remove();  // Remove the save icon
-                cancelIcon.remove();  // Remove the cancel icon
-
-                // Show the pencil icon again after canceling
+            // Click event for Cancel icon
+            cancelIcon.addEventListener("click", function () {
+                // Restore the original values
+                field.replaceChild(span, input);
+                saveIcon.remove();
+                cancelIcon.remove();
                 icon.classList.remove("hidden");
             });
         });
-    });
+    }
 });
