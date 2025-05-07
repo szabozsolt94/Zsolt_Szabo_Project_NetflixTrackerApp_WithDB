@@ -10,40 +10,11 @@
     <!-- Movie cards will be injected here -->
 </div>
 
-<script>
-    const watchLaterIDs = @Html.Raw(Json.Serialize(Model)); // Pass C# list to JS
-    const apiBaseUrl = 'http://localhost:62481'; // WebAPI port
-
-    watchLaterIDs.forEach(movieId => {
-        fetch(`http://localhost:62481/api/NetflixMovies/${movieId}`)
-            .then(response => {
-                if (!response.ok) throw new Error("Movie not found");
-                return response.json();
-            })
-            .then(movie => {
-                const $card = $('<div>', {
-                    class: 'card',
-                    'data-type': movie.Type.toLowerCase(),
-                    'data-movie-id': movie.MovieID
-                });
-
-                // Create the title element first
-                const $title = $('<h3>').text(`${movie.Title} (${movie.Year})`);
-
-                // Create the image element
-                const $img = $('<img>', {
-                    src: movie.Image
-                        ? `data:image/jpeg;base64,${movie.Image}`
-                        : '/img/moviecardplaceholder.jpg',
-                    alt: movie.Title
-                });
-
-                // Append the title first, then the image to the card
-                $card.append($title, $img);
-
-                $('#watchLaterContainer').append($card);
-            })
-            .catch(err => console.error("Error:", err.message));
-    });
-</script>
+@section Scripts {
+    <script src="~/js/MovieListRenderer.js"></script>
+    <script>
+        const watchLaterIDs = @Html.Raw(Json.Serialize(Model));
+        renderMovieList(watchLaterIDs, 'watchLaterContainer');
+    </script>
+}
 
